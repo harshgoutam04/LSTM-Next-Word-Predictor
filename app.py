@@ -6,7 +6,7 @@ from tensorflow.keras.layers import Embedding, Dense
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 
-model = load_model('lstm_model.keras')
+model.load_weights("model.weights.h5")
 with open('tokenizer.pkl', 'rb') as file:
     tokenizer = pickle.load(file)
 
