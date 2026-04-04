@@ -6,17 +6,7 @@ from tensorflow.keras.layers import Embedding
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 
-class FixedEmbedding(Embedding):
-    def __init__(self, *args, **kwargs):
-        kwargs.pop('quantization_config', None)
-        super().__init__(*args, **kwargs)
-
-
-model = load_model(
-    'lstm_model.keras', 
-    custom_objects={'Embedding': FixedEmbedding},
-    compile=False
-)
+model = load_model('lstm_model.keras', compile=False, safe_mode=False)
 with open('tokenizer.pkl', 'rb') as file:
     tokenizer = pickle.load(file)
 
