@@ -6,7 +6,7 @@ from tensorflow.keras.layers import Embedding
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 
-model = load_model('model.keras', compile=False, safe_mode=False)
+model = load_model('model.keras')
 with open('tokenizer.pkl', 'rb') as file:
     tokenizer = pickle.load(file)
 
