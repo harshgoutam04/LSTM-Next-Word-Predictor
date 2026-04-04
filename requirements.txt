@@ -1,4 +1,6 @@
-tensorflow=2.21.0
 streamlit
-pandas
 numpy
+scikit-learn
+tensorflow
+keras
+pandas
