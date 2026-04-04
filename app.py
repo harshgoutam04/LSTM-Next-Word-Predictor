@@ -1,11 +1,12 @@
 import streamlit as st
 import pickle
 import numpy as np
+import tensorflow
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 
 
-model=load_model('lstm_model.h5')
+model = tensorflow.keras.models.load_model('lstm_model.h5', compile=False)
 with open('tokenizer.pkl', 'rb') as file:
     tokenizer = pickle.load(file)
 
