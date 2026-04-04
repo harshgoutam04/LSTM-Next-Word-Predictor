@@ -1,42 +1,12 @@
 import streamlit as st
 import pickle
 import numpy as np
-import tensorflow as tf
-import keras
-from keras.layers import Embedding, Dense
-from keras.models import load_model
-from keras.preprocessing.sequence import pad_sequences
+import tensorflow
+from tensorflow.keras.layers import Embedding, Dense
+from tensorflow.keras.models import load_model
+from tensorflow.keras.preprocessing.sequence import pad_sequences
 
-def fix_config(config):
-    config.pop('quantization_config', None)
-    return config
-
-@keras.utils.register_keras_serializable()
-class FixedEmbedding(Embedding):
-    @classmethod
-    def from_config(cls, config):
-        return super().from_config(fix_config(config))
-
-@keras.utils.register_keras_serializable()
-class FixedDense(Dense):
-    @classmethod
-    def from_config(cls, config):
-        return super().from_config(fix_config(config))
-
-try:
-    model = tf.keras.models.load_model(
-        'lstm_model.keras', 
-        custom_objects={
-            'Embedding': FixedEmbedding,
-            'Dense': FixedDense
-        },
-        compile=False
-    )
-    st.success("Model loaded successfully!")
-except Exception as e:
-    st.error(f"Error loading model: {e}")
-
-
+model = load_model('lstm_model.keras')
 with open('tokenizer.pkl', 'rb') as file:
     tokenizer = pickle.load(file)
 
