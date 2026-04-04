@@ -1,6 +1,6 @@
 streamlit
 numpy
 scikit-learn
-tensorflow
-keras
+tensorflow>=2.16
+keras>=3.0
 pandas
