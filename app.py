@@ -1,12 +1,12 @@
 import streamlit as st
 import pickle
 import numpy as np
-import tensorflow
+import tensorflow as tf
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 
 
-model = load_model('lstm_model.keras')
+model = tf.keras.models.load_model("lstm_model.keras", compile=False)
 with open('tokenizer.pkl', 'rb') as file:
     tokenizer = pickle.load(file)
 
