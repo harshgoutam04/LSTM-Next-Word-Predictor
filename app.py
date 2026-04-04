@@ -35,8 +35,6 @@ except Exception as e:
     st.error(f"Error loading model: {e}")
 
 
-
-model = load_model('model.keras')
 with open('tokenizer.pkl', 'rb') as file:
     tokenizer = pickle.load(file)
 
