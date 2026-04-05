@@ -8,22 +8,30 @@ from tensorflow.keras.preprocessing.sequence import pad_sequences
 
 import tf_keras as keras
 
-class LegacyInputLayer(keras.layers.InputLayer):
-    def __init__(self, **kwargs):
-        if "batch_shape" in kwargs:
-            kwargs["batch_input_shape"] = kwargs.pop("batch_shape")
-        super().__init__(**kwargs)
+def build_model_skeleton(vocab_size, sequence_length):
+    model = Sequential()
+    # Replace 100 with your actual embedding dimension if different
+    model.add(Embedding(vocab_size, 100, input_length=sequence_length))
+    # Replace 150 with your actual LSTM units if different
+    model.add(LSTM(150))
+    model.add(Dense(vocab_size, activation='softmax'))
+    return model
 
-# 2. Load the model safely
-@st.cache_resource # This keeps the model in memory so it doesn't reload every time
+@st.cache_resource
 def load_my_model():
     try:
-        return keras.models.load_model(
-            'lstm_model.h5', 
-            custom_objects={'InputLayer': LegacyInputLayer}
-        )
+        # Update these numbers to match your training settings!
+        # Based on your previous error, your sequence length was 43
+        VOCAB_SIZE = 2828 # Check your tokenizer length!
+        SEQ_LENGTH = 43   
+        
+        model = build_model_skeleton(VOCAB_SIZE, SEQ_LENGTH)
+        
+        # Load ONLY the weights, ignoring the problematic config metadata
+        model.load_weights('lstm_model.h5')
+        return model
     except Exception as e:
-        st.error(f"Model failed to load: {e}")
+        st.error(f"Manual load failed: {e}")
         return None
 
 model = load_my_model()
