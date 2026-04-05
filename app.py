@@ -6,6 +6,9 @@ from tf_keras.models import Sequential
 from tf_keras.layers import Embedding, LSTM, Dense
 from tf_keras.preprocessing.sequence import pad_sequences
 
+import os
+st.write("Files in current directory:", os.listdir("."))
+
 # 1. Define your architecture MANUALLY
 def build_model_skeleton(vocab_size, max_len):
     model = Sequential()
