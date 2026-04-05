@@ -10,19 +10,23 @@ import tf_keras as keras
 
 class LegacyInputLayer(keras.layers.InputLayer):
     def __init__(self, **kwargs):
-        # Keras 3 uses 'batch_shape', Keras 2 uses 'batch_input_shape'
         if "batch_shape" in kwargs:
             kwargs["batch_input_shape"] = kwargs.pop("batch_shape")
         super().__init__(**kwargs)
 
-try:
-    model = keras.models.load_model(
-        'lstm_model.h5', 
-        custom_objects={'InputLayer': LegacyInputLayer}
-    )
-    print("Model loaded successfully!")
-except Exception as e:
-    print(f"Loading failed: {e}")
+# 2. Load the model safely
+@st.cache_resource # This keeps the model in memory so it doesn't reload every time
+def load_my_model():
+    try:
+        return keras.models.load_model(
+            'lstm_model.h5', 
+            custom_objects={'InputLayer': LegacyInputLayer}
+        )
+    except Exception as e:
+        st.error(f"Model failed to load: {e}")
+        return None
+
+model = load_my_model()
     
 with open('tokenizer.pkl', 'rb') as file:
     tokenizer = pickle.load(file)
@@ -33,6 +37,8 @@ max_len=44
 
 def generate_text(seed_text, num_words=10):
     text=seed_text
+    if model is None:
+        return "Error: Model is not loaded. Check the app logs."
     for _ in range(num_words):
         seq=tokenizer.texts_to_sequences([text])[0]
         padded=pad_sequences([seq], maxlen=max_len, padding='pre')
