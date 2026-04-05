@@ -6,10 +6,8 @@ from tf_keras.models import Sequential
 from tf_keras.layers import Embedding, LSTM, Dense, Input
 from tf_keras.preprocessing.sequence import pad_sequences
 
-# 1. THE RECONSTRUCTION (With explicit Input shape)
 def build_model_skeleton():
     model = Sequential([
-        # This Input layer tells Keras to "build" the model immediately
         Input(shape=(43,)), 
         Embedding(input_dim=28448, output_dim=128),
         LSTM(256),
@@ -22,10 +20,8 @@ def load_my_model():
     try:
         model = build_model_skeleton()
         
-        # Explicitly call build to be 100% sure the matrices are ready
         model.build(input_shape=(None, 43))
         
-        # Now load the weights
         model.load_weights('lstm_model.keras')
         return model
     except Exception as e:
@@ -34,13 +30,11 @@ def load_my_model():
 
 model = load_my_model()
 
-# 2. LOAD TOKENIZER
 with open('tokenizer.pkl', 'rb') as file:
     tokenizer = pickle.load(file)
 
 reverse_index = {idx: word for word, idx in tokenizer.word_index.items()}
 
-# 3. MATCH THE LENGTH (From your log: build_input_shape: [None, 43])
 MAX_SEQ_LEN = 43 
 
 def generate_text(seed_text, num_words=10):
@@ -61,7 +55,6 @@ def generate_text(seed_text, num_words=10):
         text += ' ' + next_word
     return text
 
-# --- Streamlit UI ---
 st.title("Next Word Prediction")
 seed_text = st.text_input("Enter a starting text:")
 num_words = st.slider("Number of words to generate:", 1, 20, 10)
