@@ -19,7 +19,7 @@ def build_model_skeleton(vocab_size, max_len):
 def load_my_model():
     try:
         # Match these to your training exactly
-        VOCAB_SIZE = 284448 
+        VOCAB_SIZE = 28448 
         SEQ_LENGTH = 43   # This is the 'input_length' the model expects
         
         model = build_model_skeleton(VOCAB_SIZE, SEQ_LENGTH)
