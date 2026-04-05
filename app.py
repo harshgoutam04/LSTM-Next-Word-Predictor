@@ -8,8 +8,22 @@ from tensorflow.keras.preprocessing.sequence import pad_sequences
 
 import tf_keras as keras
 
-model = keras.models.load_model('lstm_model.h5',compile=False)
-model.compile(optimizer='adam', loss='categorical_crossentropy')
+class LegacyInputLayer(keras.layers.InputLayer):
+    def __init__(self, **kwargs):
+        # Keras 3 uses 'batch_shape', Keras 2 uses 'batch_input_shape'
+        if "batch_shape" in kwargs:
+            kwargs["batch_input_shape"] = kwargs.pop("batch_shape")
+        super().__init__(**kwargs)
+
+try:
+    model = keras.models.load_model(
+        'lstm_model.h5', 
+        custom_objects={'InputLayer': LegacyInputLayer}
+    )
+    print("Model loaded successfully!")
+except Exception as e:
+    print(f"Loading failed: {e}")
+    
 with open('tokenizer.pkl', 'rb') as file:
     tokenizer = pickle.load(file)
 
