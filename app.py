@@ -8,7 +8,8 @@ from tensorflow.keras.preprocessing.sequence import pad_sequences
 
 import tf_keras as keras
 
-model = keras.models.load_model('lstm_model.h5')
+model = keras.models.load_model('lstm_model.h5',compile=False)
+model.compile(optimizer='adam', loss='categorical_crossentropy')
 with open('tokenizer.pkl', 'rb') as file:
     tokenizer = pickle.load(file)
 
