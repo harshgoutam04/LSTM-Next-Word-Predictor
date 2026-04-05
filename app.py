@@ -1,19 +1,18 @@
 import streamlit as st
 import pickle
 import numpy as np
-import tensorflow as tf
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Embedding, LSTM, Dense, Input
-from tensorflow.keras.preprocessing.sequence import pad_sequences
+import tf_keras as keras # or tensorflow.keras
+from tf_keras.models import Sequential
+from tf_keras.layers import Embedding, LSTM, Dense, Input
+from tf_keras.preprocessing.sequence import pad_sequences
 
-# 1. THE EXACT ARCHITECTURE (From your error log)
+# 1. THE RECONSTRUCTION (With explicit Input shape)
 def build_model_skeleton():
     model = Sequential([
-        # input_dim=28448, output_dim=128, input_length=43
-        Embedding(input_dim=28448, output_dim=128, input_length=43),
-        # units=256
+        # This Input layer tells Keras to "build" the model immediately
+        Input(shape=(43,)), 
+        Embedding(input_dim=28448, output_dim=128),
         LSTM(256),
-        # units=28448
         Dense(28448, activation='softmax')
     ])
     return model
@@ -22,8 +21,11 @@ def build_model_skeleton():
 def load_my_model():
     try:
         model = build_model_skeleton()
-        # We use the .keras file but only extract the weights
-        # This skips the 'quantization_config' error entirely!
+        
+        # Explicitly call build to be 100% sure the matrices are ready
+        model.build(input_shape=(None, 43))
+        
+        # Now load the weights
         model.load_weights('lstm_model.keras')
         return model
     except Exception as e:
